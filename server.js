@@ -1,11 +1,12 @@
 let express = require('express')
+let config = require('./config')
 let mongodb = require('mongodb')
 
 let app = express()
 
 let db
 
-let connectionString = 'mongodb+srv://todoAppDBUser:todo-app@7@cluster0.xc2au.mongodb.net/TodoAppDB?retryWrites=true&w=majority'
+let connectionString = config.db_connection
 mongodb.connect(connectionString, {useNewUrlParser: true}, function(err, client) {
     db = client.db()
     app.listen(3000)
