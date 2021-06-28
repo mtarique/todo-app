@@ -14,6 +14,8 @@ mongodb.connect(connectionString, {useNewUrlParser: true}, function(err, client)
 app.use(express.urlencoded({extended: false}))
 
 app.get('/', function(req, res) {
+    db.collection('items').find().toArray(function(err, items) {
+
     res.send(`
         <!DOCTYPE html>
         <html>
@@ -37,27 +39,17 @@ app.get('/', function(req, res) {
             </div>
             
             <ul class="list-group pb-5">
-            <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                <span class="item-text">Fake example item #1</span>
-                <div>
-                <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-                <button class="delete-me btn btn-danger btn-sm">Delete</button>
-                </div>
-            </li>
-            <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                <span class="item-text">Fake example item #2</span>
-                <div>
-                <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-                <button class="delete-me btn btn-danger btn-sm">Delete</button>
-                </div>
-            </li>
-            <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                <span class="item-text">Fake example item #3</span>
-                <div>
-                <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-                <button class="delete-me btn btn-danger btn-sm">Delete</button>
-                </div>
-            </li>
+                ${items.map(function (item) {
+                    return `
+                        <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                            <span class="item-text">${item.text}</span>
+                            <div>
+                            <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+                            <button class="delete-me btn btn-danger btn-sm">Delete</button>
+                            </div>
+                        </li>
+                    `
+                }).join('')}
             </ul>
             
         </div>
@@ -65,12 +57,12 @@ app.get('/', function(req, res) {
         </body>
         </html>
     `)
+    })
 })
 
 app.post('/create-item', function(req, res) {
-    //console.log(req.body.item)
     db.collection('items').insertOne({text: req.body.item}, function(){
-        res.send("Thanks for submitting the form.")
+        res.redirect('/')
     })
     
 })
