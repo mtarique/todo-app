@@ -62,7 +62,7 @@ app.get('/', function(req, res) {
                 </ul>
                 
             </div>
-            
+            <div class="text-center">&copy; 2021 Muhammad Tarique | Powered by FrIT Technologies</div>
             <script>
                 let items = ${JSON.stringify(items)}
             </script>
